@@ -1,12 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-__author__ = "zhoujialiang"
-__copyright__ = "Copyright 2019, The *** Project"
-__version__ = "1.0.0"
-__email__ = "***"
-__phone__ = "***"
-__description__ = "Data模块: HBase拉取行为序列数据"
-__usage1__ = "python dataloader.py --end_grade 41 --ds_start 20181215 --ds_num 7"
+################################################################################
+#
+# Copyright (c) 2019 ***.com, Inc. All Rights Reserved
+# The NSH Anti-Plugin Project
+################################################################################
+"""
+NSH主线挂自动迭代项目 -- 序列拉取模块
+
+Usage: python dataloader.py --end_grade 41 --ds_start 20181215 --ds_num 7
+Authors: Zhou Jialiang
+Email: zjl_sempre@163.com
+Date: 2019/02/13
+"""
 
 import os
 import sys
@@ -56,6 +62,11 @@ def init_log():
 
 
 def get_ids(path_ids):
+    """从 trigger file 获取样本id
+
+    Args:
+        path_ids: trigger file 的地址
+    """
     ids = list()
     if os.path.exists(path_ids):
         with open(path_ids, 'r') as f:
@@ -65,8 +76,16 @@ def get_ids(path_ids):
     return ids
 
 
-# 序列数据读取类
 class SequenceDataReader(threading.Thread):
+    """序列数据读取类
+
+    Attributes:
+        logger: 日志
+        queue: 多线程队列
+        start_grade: 开始等级
+        end_grade: 结束等级
+        save_dir: 序列保存路径
+    """
     def __init__(self, logger, queue, start_grade, end_grade, save_dir):
         threading.Thread.__init__(self)
         self.logger = logger
@@ -76,11 +95,14 @@ class SequenceDataReader(threading.Thread):
         self.save_dir = save_dir
 
     def read_data(self, role_id):
-        '''
-        从hbase读取数据
-        :param role_id:
-        :return:
-        '''
+        """从hbase拉取数据
+
+        Args:
+            role_id: 样本用户ID
+
+        Return:
+            seq: 样本用户行为序列
+        """
         url = HBASE_URL.format(sg=self.start_grade, eg=self.end_grade, ids=role_id)
         response = requests.post(url, timeout=600)
         results = response.json()
@@ -92,23 +114,22 @@ class SequenceDataReader(threading.Thread):
         return seq
 
     def save_to_file(self, role_id, seq):
-        '''
-        存进文件
-        :param role_id:
-        :param server:
-        :param result:
-        :return:
-        '''
+        """保存行为序列
+
+        Args:
+            role_id: 样本用户ID
+            seq: 样本用户行为序列
+        """
 
         filename = os.path.join(self.save_dir, role_id)
         with open(filename, 'w') as f:
             json.dump(seq, f, indent=4, sort_keys=True)
 
     def run(self):
-        '''
-        main func
-        :return:
-        '''
+        """多线程拉取运行接口
+
+        遍历队列中的样本ID，拉取行为序列，并保存至相应目录
+        """
 
         global lock
 
@@ -141,11 +162,11 @@ class SequenceDataReader(threading.Thread):
 
 # 主函数
 def main(argv):
-    '''
-    main func
-    :param argv:
-    :return:
-    '''
+    """主函数
+
+    拉取指定用户ID对应的0-41级行为序列并保存
+    """
+    
     # 输入参数：行为截止等级，开始和结束日期
     args = parse_args()
     start_grade = 0

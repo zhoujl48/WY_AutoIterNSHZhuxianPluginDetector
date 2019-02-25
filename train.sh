@@ -2,7 +2,7 @@
 # Usage_1: bash train.sh
 
 # 工作目录
-WORK_DIR=/home/zhoujialiang/nsh_zhuxian_sl_auto
+WORK_DIR=/home/zhoujialiang/online_zhuxian
 
 # 定义参数
 ds_start=`date -d "wednesday -5 weeks" +%Y%m%d` # 距当日最近的第五个周三，滑窗模型数据开始日期

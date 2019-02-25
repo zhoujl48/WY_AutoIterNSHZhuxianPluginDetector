@@ -1,15 +1,18 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-__author__ = "Jialiang Zhou"
-__copyright__ = "Copyright 2019, The *** Project"
-__version__ = "1.0.0"
-__email__ = "***"
-__phone__ = "***"
-__description__ = "离线训练模块: 监督模型基类"
-__usage1__ = "供调用"
+################################################################################
+#
+# Copyright (c) 2019 ***.com, Inc. All Rights Reserved
+# The NSH Anti-Plugin Project
+################################################################################
+"""
+NSH主线挂自动迭代项目 -- 离线训练模块 - 监督模型基类
 
-# 仅供其他监督模型类继承
-
+Usage: 监督模型基类
+Authors: Zhou Jialiang
+Email: zjl_sempre@163.com
+Date: 2019/02/13
+"""
 
 from abc import abstractmethod, ABCMeta
 import tensorflow.keras.backend as K
@@ -23,7 +26,6 @@ class SupervisedModel(object):
         self._batch_size = batch_size
         self._regular = regular
 
-    '''metrics f1_score'''
     @staticmethod
     def f1_score(y_true, y_pred):
         c1 = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))

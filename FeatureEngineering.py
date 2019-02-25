@@ -1,12 +1,19 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-__author__ = "Jialiang Zhou"
-__copyright__ = "Copyright 2019, The *** Project"
-__version__ = "1.0.0"
-__email__ = "***"
-__phone__ = "***"
-__description__ = "特征工程类, 提取行为特征"
-__usage1__ = "供调用"
+################################################################################
+#
+# Copyright (c) 2019 ***.com, Inc. All Rights Reserved
+# The NSH Anti-Plugin Project
+################################################################################
+"""
+NSH主线挂自动迭代项目 -- 离线训练模块，特征工程类
+提供 Sequence Length / EvFreq / EvFreqGrade / EvTime / EvTimeGrade / EvSeq / EvTimeSeq 特征
+
+Usage: 供调用
+Authors: Zhou Jialiang
+Email: zjl_sempre@163.COM
+Date: 2019/02/13
+"""
 
 import os
 import random
@@ -184,17 +191,6 @@ class DataLoader(object):
     @property
     def ids(self):
         return self._data_ids
-
-
-class SqeuenceLengthLoader(DataLoader):
-    def __init__(self, source_path, grade, logid_path, label_tags=list(['normal', 'waigua']), test_size=0.2,
-                 sampling_type='up'):
-        DataLoader.__init__(self, source_path=source_path, logid_path=logid_path, grade=grade, label_tags=label_tags,
-                            test_size=test_size,
-                            sampling_type=sampling_type)
-
-    def _sequence2feature(self, player_sequence):
-        return len(player_sequence)
 
 
 class EvfreqLoader(DataLoader):

@@ -1,0 +1,8 @@
+INFO: 02-15 10:00:01: get_ids.py:62 * 139683946161920 Start pulling pos ids on date: 2019-02-12
+INFO: 02-15 10:00:02: hiveserver2.py:138 * 139683946161920 Using database default as default
+INFO: 02-15 10:04:09: hiveserver2.py:265 * 139683946161920 Closing active operation
+INFO: 02-15 10:04:09: get_ids.py:81 * 139683946161920 Finish pulling pos ids on date: 2019-02-12
+INFO: 02-15 10:04:10: get_ids.py:62 * 140693921781504 Start pulling total ids on date: 2019-02-12
+INFO: 02-15 10:04:10: hiveserver2.py:138 * 140693921781504 Using database default as default
+INFO: 02-15 10:04:42: hiveserver2.py:265 * 140693921781504 Closing active operation
+INFO: 02-15 10:04:43: get_ids.py:81 * 140693921781504 Finish pulling total ids on date: 2019-02-12

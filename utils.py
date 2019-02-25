@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-__author__ = "Jialiang Zhou"
-__copyright__ = "Copyright 2019, The *** Project"
-__version__ = "1.0.0"
-__email__ = "***"
-__phone__ = "***"
-__description__ = "离线训练模块 - utils: 日志组件 / 时间组件 / 进度条组件"
-__usage1__ = "NULL"
+################################################################################
+"""
+NSH主线挂自动迭代项目 -- (弃用)离线训练模块，utils: 日志组件 / 时间组件 / 进度条组件
+
+Usage: 监督模型基类
+Authors: Zhou Jialiang
+Email: zjl_sempre@163.com
+Date: 2019/02/13
+"""
 
 import sys
 import time
@@ -45,7 +47,9 @@ class ProgressBar(object):
         if progress >= 1.:
             progress, self._status = 1, '\r\n'
         block = int(round(self._bar_length * progress))
-        text = "\r[{}] {:.0f}% {}  {}".format( "#" * block + "-" * (self._bar_length - block), round(progress * 100, 1), self._status, info)
+        text = "\r[{}] {:.0f}% {}  {}".format(
+                "#" * block + "-" * (self._bar_length - block), round(progress * 100, 1),
+                self._status, info)
         sys.stdout.write(text)
         sys.stdout.flush()
 

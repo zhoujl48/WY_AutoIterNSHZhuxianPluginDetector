@@ -8,7 +8,7 @@
 #pip install -r requirements.txt
 
 # 工作目录
-WORK_DIR=/home/zhoujialiang/nsh_zhuxian_sl_auto
+WORK_DIR=/home/zhoujialiang/online_zhuxian
 
 # 定义参数
 grade=$1

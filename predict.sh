@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # 工作目录
-WORK_DIR=/home/zhoujialiang/nsh_zhuxian_sl_auto
+WORK_DIR=/home/zhoujialiang/online_zhuxian
 
 # 定义参数
 end_grade=$1                                                        # 结束等级

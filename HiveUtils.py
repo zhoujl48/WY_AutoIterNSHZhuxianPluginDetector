@@ -1,32 +1,40 @@
-#!/usr/bin/python
-# -*- coding:utf-8 -*-
-__author__ = "Jialiang Zhou"
-__copyright__ = "Copyright 2019, The *** Project"
-__version__ = "1.0.0"
-__email__ = "***"
-__phone__ = "***"
-__description__ = "Data模块: 用于从Hive获取数据ID"
-__usage__ = "供调用"
-import os
-import impala.dbapi
-import json
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+################################################################################
+#
+# Copyright (c) 2019 ***.com, Inc. All Rights Reserved
+# The NSH Anti-Plugin Project
+################################################################################
+"""
+NSH主线挂自动迭代项目 -- HiveUtils
+连接Hive新接口
 
+Usage: 供调用
+Authors: Zhou Jialiang
+Email: zjl_sempre@163.com
+Date: 2019/02/13
+"""
+
+import os
+import json
+import impala.dbapi
+
+
+# Hive Config New
 hive_ip = '***'
 hive_port = 36003
 
 
 def connect_hive(hive_ip, hive_port, sql):
     # 验证
-    os.system('kinit -kt /***/***/***.keytab ***@***-***-***')
+    os.system('kinit -kt ***.keytab ***@***')
     # 执行
     conn = impala.dbapi.connect(host=hive_ip, port=hive_port, auth_mechanism='GSSAPI',
                                 kerberos_service_name='hive', database="default")
     cursor = conn.cursor()
     cursor.execute("show databases")
-    # print(cursor.fetchall())
 
     cursor.execute(sql)
-    # print(cursor.description)  # prints the result set's schema
     results = cursor.fetchall()
 
 

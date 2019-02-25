@@ -1,13 +1,18 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
+################################################################################
+#
+# Copyright (c) 2019 ***.com, Inc. All Rights Reserved
+# The NSH Anti-Plugin Project
+################################################################################
+"""
+NSH主线挂自动迭代项目 -- 离线训练模块，MLP模型
 
-__author__ = "Jialiang Zhou"
-__copyright__ = "Copyright 2019, The *** Project"
-__version__ = "1.0.0"
-__email__ = "***"
-__phone__ = "***"
-__description__ = "离线训练模块: MLP模型"
-__usage1__ = "python MLPModel.py --ds_start 20181212 --ds_num 28 ..."
+Usage: python MLPModel.py --ds_start 20181212 --ds_num 28 ...
+Authors: Zhou Jialiang
+Email: zjl_sempre@163.com
+Date: 2019/02/13
+"""
 
 import argparse
 import numpy as np
@@ -19,10 +24,26 @@ from tensorflow.keras import regularizers
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from SupervisedModel import SupervisedModel
 from FeatureEngineering import *
-from config import SAVE_DIR_BASE
+from config import SAVE_DIR_BASE, PROJECT_DIR
 
 
 class MLPModel(SupervisedModel):
+    """MLP模型
+
+        Attributes:
+            _feature_train: 训练数据
+            _label_train: 训练标签
+            _feature_test: 测试数据
+            _feature_label: 测试标签
+            _feature_type: 特征提取方式
+            _ids: 样本ID
+            _max_len: 最大长度限制
+            _embedding_dropout_size: embedding的dropout大小
+            _dense_size_1: 第一层dense层大小
+            _dense_size_1: 第二层dense层大小
+            _dense_dropout_size: dense层的dropout大小
+            _model_file: 模型保存路径
+        """
     def __init__(self, train_data, test_data, feature_type, save_path='base', epoch=30, batch_size=128, dropout_size=0.2,
                  regular=0.002, dense_size_1=128, dense_size_2=128, ids=None):
         SupervisedModel.__init__(self, epoch=epoch, batch_size=batch_size, regular=regular)
@@ -45,8 +66,9 @@ class MLPModel(SupervisedModel):
                                         dense_size1=self._dense_size_1,
                                         dense_size2=self._dense_size_2))
 
-    # Model定义及训练
     def model(self):
+        """Model定义及训练
+        """
         log('[{time}] Building model...'.format(time=get_time()))
         model = Sequential()
         model.add(Dense(self._dense_size_1, input_dim=len(self._feature_train[0]), activation='relu',
@@ -74,8 +96,9 @@ class MLPModel(SupervisedModel):
     def run(self):
         self.model()
 
-    # 预测调用接口(离线评估用)
     def run_predict(self, model_path, ts_pred_start):
+        """离线训练调用接口
+        """
 
         # 加载模型
         model = load_model(model_path, compile=False)
@@ -123,7 +146,7 @@ if __name__ == '__main__':
 
     # 数据路径
     data_path_list = [os.path.join(SAVE_DIR_BASE, 'data', ds_range) for ds_range in ds_list]
-    logid_path = os.path.join('/home/zhoujialiang/nsh_zhuxian_sl_auto/logid', '41')
+    logid_path = os.path.join(PROJECT_DIR, 'logid', '41')
 
     # 模型保存路径
     PATH_MODEL_SAVE = os.path.join(SAVE_DIR_BASE, 'model', '{}_{}'.format(ds_start, ds_num))
