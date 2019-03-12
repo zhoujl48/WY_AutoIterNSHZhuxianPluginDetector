@@ -16,19 +16,20 @@ Date: 2019/02/13
 
 import os
 import sys
+import json
+import requests
 import argparse
 import logging
 import logging.handlers
-from queue import Queue
-import _thread
-import threading
-import json
-import requests
 from time import sleep
+from queue import Queue
+from threading import Thread, Lock
 from datetime import datetime, timedelta
 from config import SAVE_DIR_BASE, THREAD_NUM, HBASE_URL
 
-lock = _thread.allocate_lock()
+
+# 获取锁对象
+lock = Lock()
 
 
 # 时间统计格式
@@ -76,7 +77,7 @@ def get_ids(path_ids):
     return ids
 
 
-class SequenceDataReader(threading.Thread):
+class SequenceDataReader(Thread):
     """序列数据读取类
 
     Attributes:
@@ -124,20 +125,23 @@ class SequenceDataReader(threading.Thread):
         filename = os.path.join(self.save_dir, role_id)
         with open(filename, 'w') as f:
             json.dump(seq, f, indent=4, sort_keys=True)
-
+    
     def run(self):
         """多线程拉取运行接口
-
+        
+        线程功能定义
         遍历队列中的样本ID，拉取行为序列，并保存至相应目录
         """
-
+        
+        # 全局锁
         global lock
 
         # 循环读取queue中数据
         while True:
             if self.queue.qsize() % 1000 == 0:
                 self.logger.info('{} id left'.format(self.queue.qsize()))
-
+            
+            # 临界区：从队列获取role_id，需锁定
             lock.acquire()
             if self.queue.empty():
                 lock.release()
@@ -154,7 +158,8 @@ class SequenceDataReader(threading.Thread):
                 self.save_to_file(role_id, seq)
             except Exception as e:
                 self.logger.error('error with id = {}, error = {}'.format(role_id, e))
-                # 若失败则重新放入队列
+                
+                # 临界区：若失败则重新放入队列，需锁定
                 lock.acquire()
                 self.queue.put(role_id)
                 lock.release()
